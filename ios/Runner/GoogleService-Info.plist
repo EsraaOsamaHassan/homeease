@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>540108580634-dog3neoa2p4ipa9mefo1aus7ksjd3ec6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.540108580634-dog3neoa2p4ipa9mefo1aus7ksjd3ec6</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>540108580634-h4righhrppfre4grjlda4335eieoad0v.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAEFb-48cLjHa7Thofc26uw7-Z7cSReaF8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>540108580634</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.homeease</string>
+	<key>PROJECT_ID</key>
+	<string>homeease-3db37</string>
+	<key>STORAGE_BUCKET</key>
+	<string>homeease-3db37.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:540108580634:ios:91cb057dead42b67b3aea3</string>
+</dict>
+</plist>

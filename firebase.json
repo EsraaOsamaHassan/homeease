@@ -1,0 +1,23 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "homeease-3db37",
+          "appId": "1:540108580634:android:26865acd4bee6df9b3aea3",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "homeease-3db37",
+          "configurations": {
+            "android": "1:540108580634:android:26865acd4bee6df9b3aea3",
+            "ios": "1:540108580634:ios:91cb057dead42b67b3aea3",
+            "web": "1:540108580634:web:7887fef82585040bb3aea3"
+          }
+        }
+      }
+    }
+  }
+}
