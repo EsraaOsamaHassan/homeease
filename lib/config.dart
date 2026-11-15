@@ -1,5 +1,5 @@
 class AppConfig {
-  static const String openRouterApiKey = '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';
+  static const String openRouterApiKey = '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';
   static const String apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
   static const String model = 'google/gemini-2.5-flash';
 

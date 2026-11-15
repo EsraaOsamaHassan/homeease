@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:homeease/screens/createRequestInFirestore.dart';
 
 import '../data.dart';
 import '../l10n.dart';
 import '../models.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
-import 'request_confirmation_screen.dart';
+import 'request_confirmation_screen.dart' hide createRequestInFirestore;
 
 class TechniciansScreen extends StatefulWidget {
   const TechniciansScreen({super.key, required this.draft});
@@ -19,6 +21,35 @@ class _TechniciansScreenState extends State<TechniciansScreen> {
   static const _maxSelected = 5;
   late int _sort = widget.draft.emergency ? 2 : 0;
   final Set<String> _selected = {};
+  bool _sending = false;
+  List<Technician> _real = []; // مختصين حقيقيين من Firestore
+
+  @override
+  void initState() {
+    super.initState();
+    _loadReal();
+  }
+
+  Future<void> _loadReal() async {
+    try {
+      final sid = widget.draft.service.id;
+      final snap = await FirebaseFirestore.instance
+          .collection('users')
+          .where('role', isEqualTo: 'provider')
+          .limit(100)
+          .get();
+      final list = snap.docs
+          .where((d) => ((d.data()['services'] as List?) ?? const []).contains(sid))
+          .map((d) => Technician.fromUser(d.id, d.data(), sid))
+          .toList();
+      if (mounted) setState(() => _real = list);
+    } catch (e) {
+      debugPrint('LOAD PROVIDERS ERROR: $e');
+    }
+  }
+
+  List<Technician> get _pool =>
+      [..._real, ...techniciansFor(widget.draft.service.id)];
 
   List<Technician> get _all {
     var list = techniciansFor(widget.draft.service.id);
@@ -41,7 +72,7 @@ class _TechniciansScreenState extends State<TechniciansScreen> {
         list.sort((a, b) => a.priceFrom.compareTo(b.priceFrom));
         break;
     }
-    return list;
+    return [..._real, ...list]; // المختصين الحقيقيين الأول
   }
 
   void _toggle(Technician t) {
@@ -59,19 +90,39 @@ class _TechniciansScreenState extends State<TechniciansScreen> {
     });
   }
 
-  void _send() {
-    final chosen =
-        techniciansFor(widget.draft.service.id).where((t) => _selected.contains(t.id)).toList();
+  Future<void> _send() async {
+    if (_sending) return;
+    setState(() => _sending = true);
+
+    final chosen = _pool.where((t) => _selected.contains(t.id)).toList();
     final r = ServiceRequest(
       id: widget.draft.id ?? RequestStore.nextId(),
       draft: widget.draft,
       technicians: chosen,
     );
-    RequestStore.add(r);
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-          builder: (_) => RequestConfirmationScreen(request: r)),
-      (route) => route.isFirst,
+
+    try {
+      await createRequestInFirestore(widget.draft,
+          code: r.id,
+          invitedProviders:
+              chosen.where((t) => t.isReal).map((t) => t.id).toList());
+    } catch (e) {
+      debugPrint('CREATE REQUEST ERROR: $e');
+      if (!mounted) return;
+      setState(() => _sending = false);
+      showSnack(
+          context,
+          tr('تعذر إرسال الطلب، حاول مرة أخرى',
+              'Could not send the request, try again'));
+      return;
+    }
+
+    RequestStore.add(r); // لسه محاكاة لحد ما نربط الردود بـ Firestore
+    if (!mounted) return;
+    setState(() => _sending = false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => RequestConfirmationScreen(request: r)),
     );
   }
 
@@ -108,8 +159,7 @@ class _TechniciansScreenState extends State<TechniciansScreen> {
                       children: [
                         Row(
                           children: [
-                            Icon(draft.service.icon,
-                                size: 18, color: AppColors.navy),
+                            Image.asset(draft.service.icon, width: 18, height: 18),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -183,7 +233,7 @@ class _TechniciansScreenState extends State<TechniciansScreen> {
                     ? tr('اختر فنياً واحداً على الأقل', 'Select at least one technician')
                     : tr('إرسال الطلب إلى (${_selected.length})',
                         'Send request to (${_selected.length})'),
-                onTap: _selected.isEmpty ? null : _send,
+                             onTap: (_selected.isEmpty || _sending) ? null : _send,
               ),
             ),
           ],
@@ -233,9 +283,11 @@ class _TechniciansScreenState extends State<TechniciansScreen> {
                                         fontSize: 15,
                                         color: AppColors.navy)),
                               ),
-                              const SizedBox(width: 4),
-                              const Icon(Icons.verified,
-                                  size: 16, color: Color(0xFF3F86C7)),
+                              if (!t.isReal) ...[
+                                const SizedBox(width: 4),
+                                const Icon(Icons.verified,
+                                    size: 16, color: Color(0xFF3F86C7)),
+                              ],
                             ],
                           ),
                           const SizedBox(height: 2),
@@ -243,6 +295,11 @@ class _TechniciansScreenState extends State<TechniciansScreen> {
                               style: const TextStyle(
                                   fontSize: 12, color: AppColors.muted)),
                           const SizedBox(height: 4),
+                          if (t.isReal)
+                            Text(tr('مختص جديد', 'New provider'),
+                                style: const TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.w600))
+                          else
                           Row(
                             children: [
                               const Icon(Icons.star_rounded,
@@ -271,11 +328,13 @@ class _TechniciansScreenState extends State<TechniciansScreen> {
                   spacing: 8,
                   runSpacing: 6,
                   children: [
-                    _stat(Icons.place_outlined,
-                        '${t.distanceKm.toStringAsFixed(1)} ${tr('كم', 'km')}'),
-                    _stat(Icons.schedule, '${t.etaMin} ${tr('د', 'min')}'),
-                    _stat(Icons.payments_outlined,
-                        tr('من ${t.priceFrom} ج.م', 'From EGP ${t.priceFrom}')),
+                    if (!t.isReal) ...[
+                      _stat(Icons.place_outlined,
+                          '${t.distanceKm.toStringAsFixed(1)} ${tr('كم', 'km')}'),
+                      _stat(Icons.schedule, '${t.etaMin} ${tr('د', 'min')}'),
+                      _stat(Icons.payments_outlined,
+                          tr('من ${t.priceFrom} ج.م', 'From EGP ${t.priceFrom}')),
+                    ],
                     t.available
                         ? Pill(tr('متاح الآن', 'Available now'),
                             bg: AppColors.greenSoft, fg: AppColors.green)

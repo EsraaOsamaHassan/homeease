@@ -8,21 +8,21 @@ String get kDefaultAddress =>
 
 const kServices = <ServiceItem>[
 
-  ServiceItem('plumber', 'سبّاك', 'Plumber', Icons.plumbing, true),
-  ServiceItem('electrician', 'كهربائي', 'Electrician', Icons.bolt, true),
-  ServiceItem('carpenter', 'نجّار', 'Carpenter', Icons.handyman, true),
-  ServiceItem('ac', 'فني تكييف', 'AC Technician', Icons.ac_unit, true),
-  ServiceItem('painter', 'نقّاش', 'Painter', Icons.format_paint, true),
+  ServiceItem('plumber', 'سبّاك', 'Plumber', "assets/icons/plumber.png", true),
+  ServiceItem('electrician', 'كهربائي', 'Electrician', "assets/icons/electrician.png", true),
+  ServiceItem('carpenter', 'نجّار', 'Carpenter', "assets/icons/carpenter.png", true),
+  ServiceItem('ac', 'فني تكييف', 'AC Technician', "assets/icons/ac-repair.png", true),
+  ServiceItem('painter', 'نقّاش', 'Painter', "assets/icons/paint-roller.png", true),
 
   ServiceItem('cleaning', 'تنظيف المنزل', 'House Cleaning',
-      Icons.cleaning_services, false),
+      "assets/icons/cleaning.png", false),
   ServiceItem(
-      'laundry', 'غسيل', 'Laundry', Icons.local_laundry_service, false),
-  ServiceItem('ironing', 'كي', 'Ironing', Icons.dry_cleaning, false),
-  ServiceItem('cooking', 'طبخ', 'Cooking', Icons.restaurant, false),
-  ServiceItem('babysitting', 'رعاية أطفال', 'Babysitting', Icons.child_care,
+      'laundry', 'غسيل', 'Laundry', "assets/icons/laundry.png", false),
+  ServiceItem('ironing', 'كي', 'Ironing', "assets/icons/ironing.png", false),
+  ServiceItem('cooking', 'طبخ', 'Cooking', "assets/icons/cooking.png", false),
+  ServiceItem('babysitting', 'رعاية أطفال', 'Babysitting', "assets/icons/babysitter.png",
       false),
-  ServiceItem('petcare', 'رعاية حيوانات', 'Pet Care', Icons.pets, false),
+  ServiceItem('petcare', 'رعاية حيوانات', 'Pet Care', "assets/icons/pet-care.png", false),
 ];
 
 ServiceItem serviceById(String id) =>

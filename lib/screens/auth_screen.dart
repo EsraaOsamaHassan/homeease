@@ -135,7 +135,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          RoundIconButton(
+                          const RoundIconButton(
                               icon: Icons.translate, onTap: Lang.toggle),
                           const SizedBox(width: 8),
                           RoundIconButton(
@@ -157,7 +157,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       height: 128,
                       width: double.infinity,
                       child: Image.asset(
-                        'assets/images/login.jpg',
+                        'assets/HomeEase_ Your Home, Our Care.png',
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) =>
                         const PhotoBox(height: 128),

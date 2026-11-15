@@ -2,17 +2,18 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:homeease/l10n.dart';
 
-import 'l10n.dart';
 
 /// التاب الحالي في الشريط السفلي (0 الرئيسية، 1 طلباتي، 2 المساعد، 3 منزلي، 4 حسابي)
 final ValueNotifier<int> shellTab = ValueNotifier<int>(0);
 
 class ServiceItem {
   final String id, ar, en;
-  final IconData icon;
+  // final IconData icon;
+  final String icon ;
   final bool maintenance;
-  const ServiceItem(this.id, this.ar, this.en, this.icon, this.maintenance);
+  const ServiceItem(this.id, this.ar, this.en, this.icon , this.maintenance);
   String get name => tr(ar, en);
 }
 
@@ -47,8 +48,38 @@ class Technician {
     this.available,
     this.tagsAr,
     this.tagsEn,
-    this.color,
-  );
+    this.color, {
+    this.isReal = false,
+  });
+
+  /// true = مختص حقيقي مسجّل في Firestore (مش من القائمة الوهمية)
+  final bool isReal;
+
+  /// بيحوّل document من collection `users` لفني يظهر في القائمة
+  factory Technician.fromUser(
+      String uid, Map<String, dynamic> d, String serviceId) {
+    const yearsMap = {'lt1': 1, '1-3': 2, '3-5': 4, '5-10': 7, '10+': 10};
+    final email = (d['email'] as String?) ?? '';
+    var name = ((d['name'] as String?) ?? '').trim();
+    if (name.isEmpty) name = email.contains('@') ? email.split('@').first : 'Provider';
+    return Technician(
+      uid,
+      name,
+      name,
+      serviceId,
+      0,
+      0,
+      yearsMap[d['experienceYears']] ?? 0,
+      0,
+      0,
+      0,
+      true,
+      const [],
+      const [],
+      const Color(0xFFC8643C),
+      isReal: true,
+    );
+  }
 
   String get name => tr(nameAr, nameEn);
   List<String> get tags => Lang.ar ? tagsAr : tagsEn;
@@ -118,7 +149,7 @@ class RequestStore {
   static void add(ServiceRequest r) {
     requests.value = [r, ...requests.value];
     // محاكاة: أول فنيين يقبلوا الطلب بعد ثواني
-    final pool = r.technicians.where((t) => t.available).toList();
+    final pool = r.technicians.where((t) => t.available && !t.isReal).toList();
     for (var i = 0; i < pool.length && i < 2; i++) {
       final tech = pool[i];
       Timer(Duration(seconds: 4 + i * 5), () {

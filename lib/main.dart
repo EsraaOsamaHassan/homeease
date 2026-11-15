@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:homeease/screens/auth_gate.dart';
+import 'package:homeease/screens/provider_home_screen.dart';
 
 import 'firebase_options.dart';
 import 'l10n.dart';
@@ -40,7 +41,9 @@ class HomeEaseApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          home: const AuthGate(signedIn: MainShell()),
+          home: const AuthGate(customerHome: MainShell(),
+            providerHome: ProviderHomeScreen(),
+          ),
         );
       },
     );

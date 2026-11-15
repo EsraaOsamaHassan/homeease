@@ -75,8 +75,7 @@ class RequestsScreen extends StatelessWidget {
                   height: 42,
                   decoration: const BoxDecoration(
                       color: AppColors.peach, shape: BoxShape.circle),
-                  child: Icon(r.draft.service.icon,
-                      size: 20, color: AppColors.navy),
+                  child: Image.asset(r.draft.service.icon, width: 20, height: 20),
                 ),
                 const SizedBox(width: 12),
                 Expanded(

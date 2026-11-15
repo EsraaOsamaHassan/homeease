@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../data.dart';
 import '../l10n.dart';
-import '../models.dart';
 import '../services/ai_service.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
@@ -278,7 +277,7 @@ class _AiResultScreenState extends State<AiResultScreen> {
               children: [
                 for (final s in kServices)
                   ActionChip(
-                    avatar: Icon(s.icon, size: 16, color: AppColors.navy),
+                    avatar: Image.asset(s.icon, width: 16, height: 16),
                     label: Text(s.name),
                     onPressed: () => setState(() => _pickedCategory = s.id),
                   ),
@@ -308,7 +307,7 @@ class _AiResultScreenState extends State<AiResultScreen> {
                 decoration: BoxDecoration(
                     color: AppColors.peach,
                     borderRadius: BorderRadius.circular(12)),
-                child: Icon(s.icon, color: AppColors.navy),
+                child: Image.asset(s.icon, width: 16, height: 16),
               ),
               const SizedBox(width: 12),
               Expanded(

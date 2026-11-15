@@ -131,11 +131,10 @@ class _RequestScreenState extends State<RequestScreen> {
                   const SizedBox(height: 16),
                   _label(tr('الخدمة والمشكلة', 'Service & issue')),
                   DropdownButtonFormField<String>(
-                    value: _service.id,
+                    initialValue: _service.id,
                     isExpanded: true,
                     decoration: fieldDecoration(
-                        prefix: Icon(_service.icon,
-                            size: 18, color: AppColors.navy)),
+                        prefix: Image.asset(_service.icon, width: 18, height: 18)),
                     items: [
                       for (final s in kServices)
                         DropdownMenuItem(value: s.id, child: Text(s.name)),

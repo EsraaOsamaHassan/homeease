@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../data.dart';
 import '../l10n.dart';
-import '../models.dart';
 import '../theme.dart';
 import '../widgets/common.dart';
 import 'emergency_received_screen.dart';

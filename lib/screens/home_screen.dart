@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text(tr('المنزل · المعادي، القاهرة', 'HOME · MAADI, CAIRO'),
                       style: AppText.eyebrow),
                 ),
-                RoundIconButton(icon: Icons.translate, onTap: Lang.toggle),
+                const RoundIconButton(icon: Icons.translate, onTap: Lang.toggle),
                 const SizedBox(width: 8),
                 RoundIconButton(
                   icon: Icons.help_outline,
@@ -136,7 +136,7 @@ class _ServiceTile extends StatelessWidget {
                 height: 36,
                 decoration: const BoxDecoration(
                     color: AppColors.peach, shape: BoxShape.circle),
-                child: Icon(service.icon, size: 18, color: AppColors.navy),
+                child: Image.asset(service.icon, width: 18, height: 18),
               ),
               const SizedBox(height: 8),
               Text(
